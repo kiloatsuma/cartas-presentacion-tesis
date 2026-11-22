@@ -1,0 +1,458 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Aportes de mi tesis</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: barra superior con modos, una columna de estudio centrada (max 760px), tarjeta grande con volteo y barra de calificación debajo */
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --fg:#1B2230; --muted:#5B6578; --line:#D9DEE7;
+  --accent:#2F4FA2; --accent-fg:#FFFFFF; --chip:#E6EBF5;
+  --good:#1F7A4D; --mid:#A8680F; --bad:#B3372F;
+  --good-bg:#E3F3EA; --mid-bg:#F8EBD6; --bad-bg:#F8E1DF;
+  --ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12161F; --surface:#1B2130; --fg:#E8ECF3; --muted:#9AA5BA; --line:#2C3548;
+  --accent:#8FA6F0; --accent-fg:#0F1524; --chip:#25304A;
+  --good:#5CCB92; --mid:#E0A24E; --bad:#F08A82;
+  --good-bg:#183425; --mid-bg:#3A2D14; --bad-bg:#3C1E1C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161F; --surface:#1B2130; --fg:#E8ECF3; --muted:#9AA5BA; --line:#2C3548;
+  --accent:#8FA6F0; --accent-fg:#0F1524; --chip:#25304A;
+  --good:#5CCB92; --mid:#E0A24E; --bad:#F08A82;
+  --good-bg:#183425; --mid-bg:#3A2D14; --bad-bg:#3C1E1C; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--ui);font-size:15px;line-height:1.5;
+  padding-block:18px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--serif);font-weight:600;font-size:1.55rem;margin:0;text-wrap:balance}
+h2{font-family:var(--serif);font-weight:600;font-size:1.2rem;margin:0;text-wrap:balance}
+p{margin:0}
+.top{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;justify-content:space-between}
+.sub{color:var(--muted);font-size:.85rem}
+.nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.nav button,.tabs button{white-space:nowrap}
+button{font:inherit;color:inherit;cursor:pointer}
+.tab{border:1px solid var(--line);background:var(--surface);padding:8px 12px;border-radius:8px;font-size:.88rem;font-weight:500}
+.tab[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn{border:1px solid var(--line);background:var(--surface);padding:9px 14px;border-radius:8px;font-weight:500;min-height:40px}
+.btn.pri{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:1.35rem;font-variant-numeric:tabular-nums;font-family:var(--serif)}
+.stat span{font-size:.78rem;color:var(--muted)}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.mode{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:4px}
+.mode:hover{border-color:var(--accent)}
+.mode strong{font-family:var(--serif);font-size:1.05rem}
+.mode span{color:var(--muted);font-size:.85rem}
+select{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;max-width:100%}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar{height:8px;background:var(--chip);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;background:var(--chip);color:var(--fg);border-radius:99px;padding:2px 10px;font-size:.76rem;font-weight:500}
+/* tarjeta */
+.stage{position:relative;touch-action:pan-y;user-select:none}
+.card{cursor:pointer;transition:transform .18s ease,opacity .18s ease;will-change:transform}
+.card.drag{transition:none}
+.flip{display:grid;perspective:1200px}
+.face{grid-area:1/1;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 20px;min-height:340px;
+  display:flex;flex-direction:column;gap:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform .35s ease}
+.face.back{transform:rotateY(180deg)}
+.flip.on .face.front{transform:rotateY(-180deg)}
+.flip.on .face.back{transform:rotateY(0)}
+.flip:not(.on) .face.back{pointer-events:none}
+.au{font-family:var(--serif);font-size:1.8rem;font-weight:600;line-height:1.15;text-wrap:balance}
+.yr{color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-family:var(--serif);font-size:1.2rem;line-height:1.35;margin-top:auto}
+.hint{color:var(--muted);font-size:.8rem;margin-top:auto}
+.lab{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.blk{display:flex;flex-direction:column;gap:2px}
+.blk p{font-family:var(--serif);font-size:1.06rem;line-height:1.4}
+.key p{font-weight:600}
+.warn{background:var(--mid-bg);color:var(--fg);border-radius:8px;padding:8px 10px;font-size:.82rem}
+.tag{position:absolute;top:14px;padding:4px 10px;border-radius:8px;font-weight:600;font-size:.8rem;opacity:0;pointer-events:none;z-index:2;transition:opacity .1s}
+.tag.r{right:14px;background:var(--good-bg);color:var(--good)}
+.tag.l{left:14px;background:var(--bad-bg);color:var(--bad)}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rate:not(.show){visibility:hidden}
+.rate button{border-radius:10px;padding:11px 6px;font-weight:600;font-size:.88rem;border:1px solid var(--line);background:var(--surface)}
+.rate .n{color:var(--bad);background:var(--bad-bg);border-color:transparent}
+.rate .p{color:var(--mid);background:var(--mid-bg);border-color:transparent}
+.rate .d{color:var(--good);background:var(--good-bg);border-color:transparent}
+.ctrl{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
+/* opciones */
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:11px 14px;font-family:var(--serif);font-size:1.02rem;line-height:1.35}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.ok{background:var(--good-bg);border-color:var(--good)}
+.opt.bad{background:var(--bad-bg);border-color:var(--bad)}
+.fb{border-radius:10px;padding:10px 12px;background:var(--chip);font-size:.9rem}
+/* comparar */
+.rel{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px;display:flex;flex-direction:column;gap:8px}
+.rel .row{gap:6px}
+.rel p{font-family:var(--serif);font-size:1.04rem}
+.list{display:flex;flex-direction:column;gap:10px}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.res ul{margin:6px 0 0;padding-left:18px;font-size:.9rem}
+.big{font-family:var(--serif);font-size:2.4rem;font-weight:600;font-variant-numeric:tabular-nums}
+@media (max-width:520px){.au{font-size:1.5rem}.face{padding:18px 16px;min-height:360px}}
+@media (prefers-reduced-motion:reduce){.card,.face,.bar i{transition:none}}
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+const TH={TND:"Trastornos del neurodesarrollo",EST:"Estrés y sistema familiar",FLX:"Flexibilidad psicológica parental",CRI:"Estilos de crianza",MED:"Mediación, moderación e intervención",CTX:"Contexto y cultura",DIS:"Discusión: muestra y explicaciones",INS:"Instrumentos"};
+/* [id, autor, año, dimensión, pregunta, aporte del autor, concepto clave, uso en mi tesis, (alerta)] */
+const R=[
+["apa","APA","2023","TND","¿Cómo define el DSM-5-TR los trastornos del neurodesarrollo?","Alteraciones de inicio temprano que afectan el funcionamiento personal, social, académico u ocupacional, con mayor frecuencia e intensidad que lo esperable para la edad.","Inicio temprano + deterioro funcional.","Define la población: TEA, TDAH, discapacidad intelectual, aprendizaje y lenguaje."],
+["thap","Thapar et al.","2016","TND","¿Qué plantean Thapar et al. sobre el impacto de los TND?","Los TND inician temprano y afectan de forma heterogénea el funcionamiento social, académico, laboral y emocional. Proponen modelos de psicopatología más flexibles.","Heterogeneidad de los TND.","Abre el planteamiento: ese impacto recae también en el sistema familiar."],
+["bark","Barkley","1997","TND","¿Qué modelo del TDAH propuso Barkley?","Un modelo centrado en la inhibición conductual, que no logra explicar el subtipo inatento.","Inhibición conductual (con límite).","Primer modelo del TDAH en el marco teórico."],
+["sb03","Sonuga-Barke","2003","TND","¿Qué añade Sonuga-Barke al modelo del TDAH?","Un modelo de dos vías: alteración ejecutiva y circuitos de recompensa como vulnerabilidad biológica.","Modelo de doble vía.","Responde a la limitación del modelo de Barkley."],
+["sb07","Sonuga-Barke y Castellanos","2007","TND","¿Qué redes cerebrales plantean Sonuga-Barke y Castellanos en el TDAH?","Una red de tarea positiva y una red por defecto (tarea negativa), que en el TDAH no se desactiva bien.","Dificultad para desactivar la red por defecto.","Es el modelo más actual del TDAH en el marco."],
+["just","Just","2004","TND","¿Qué modelo del TEA propone Just?","Conectividad neuronal: hay menor integración entre áreas de la corteza, sin que cada área esté afectada por sí sola.","Subconectividad cortical.","Modelo principal actual del TEA en el marco."],
+["bc","Baron-Cohen","2009","TND","¿Qué explicación del TEA ofrece Baron-Cohen?","La «ceguera mental»: un retraso en la teoría de la mente, clave para leer los estados de los demás.","Ceguera mental / teoría de la mente.","Explicación cognitiva del TEA."],
+["happe","Happé y Frith","2006","TND","¿Qué es la coherencia central débil según Happé y Frith?","Un procesamiento de la información centrado en el detalle más que en lo global.","Coherencia central débil.","Complementa los modelos del TEA."],
+["lord","Lord et al.","2018","EST","¿Qué rol atribuyen Lord et al. a la familia en el diagnóstico?","La cercanía y la observación constante en la familia facilitan identificar de forma temprana las primeras manifestaciones del trastorno.","Detección temprana desde la familia.","Muestra el papel central del cuidador."],
+["crai","Craig et al.","2016","EST","¿Qué encontraron Craig et al. sobre el estrés parental en TND?","El estrés es mayor que en padres de niños con desarrollo típico, sobre todo en TEA y TDAH, y aumenta si el TDAH tiene comorbilidad conductual. Se relaciona con el CI del niño.","Más estrés en TND, mayor en TEA y TDAH.","Justifica estudiar el malestar del cuidador."],
+["crai2","Craig et al.","2016","FLX","¿Cómo entienden Craig et al. el estrés parental?","No es solo una percepción subjetiva: responde a condiciones objetivas del entorno, por lo que las valoraciones adaptativas son un mecanismo central del cambio.","Estrés = respuesta a condiciones objetivas.","Apoya dar herramientas para ampliar el repertorio conductual del cuidador."],
+["barr","Barroso et al.","2017","EST","¿Qué aporta el meta-análisis de Barroso et al. sobre el estrés parental?","El estrés se relaciona con las conductas externalizantes (más en niños), no baja a lo largo del ciclo vital y la relación varía entre hispanos y no hispanos, con poca representación hispana.","Estrés ligado a externalización; poca muestra hispana.","Respalda el vacío en población hispana."],
+["hw","Hayes y Watson","2012","EST","¿Qué muestran Hayes y Watson sobre el estrés en TEA?","Meta-análisis: los padres de niños con TEA presentan más estrés que los padres de niños sin TEA.","TEA incrementa el estrés.","Jerarquiza el estrés por diagnóstico."],
+["zait","Zaidman-Zait et al.","2016","EST","¿Qué factores protegen o ponen en riesgo según Zaidman-Zait et al.?","El afrontamiento activo (solución de problemas, reestructuración) protege; el pasivo (evitación, distanciamiento) es riesgo. El apoyo social y familiar protege.","Afrontamiento activo y apoyo = protección.","Fundamenta la variable «apoyo para el cuidado»."],
+["kish","Kishimoto et al.","2023","EST","¿Qué relación hallaron Kishimoto et al. entre familia y estrés?","La cohesión familiar se relaciona inversamente con el estrés; la adaptabilidad no tiene efecto relevante; la autoeficacia parental media.","Cohesión ↓ estrés; autoeficacia media.","Ejemplo de variables familiares con efectos desiguales."],
+["fran","François-Sévigny et al.","2026","EST","¿Qué papel dan François-Sévigny et al. al sexo del cuidador?","El diagnóstico del niño es la variable independiente y el sexo del cuidador la moderadora: las madres muestran menor autoeficacia que los padres.","Sexo del cuidador como moderador.","Justifica considerar el sexo en los análisis."],
+["turn","Turnage et al.","2025","EST","¿Qué predice la calidad de vida de los padres según Turnage et al.?","La autoeficacia y el afrontamiento eficaz; el estrés la disminuye, y el ingreso y la gravedad del diagnóstico influyen aunque no se pueden controlar.","Autoeficacia, ingreso y gravedad.","Respalda el peso del factor socioeconómico."],
+["fant","Fante et al.","2025","EST","¿Qué muestran Fante et al. sobre la calidad de vida del cuidador?","El autismo nivel 2 o 3 afecta la calidad de vida física y psicológica; los vínculos fuera del rol parental protegen, pero el rol puede absorber y aislar; pesa el factor económico.","Calidad de vida y círculo vicioso.","Contexto de vulnerabilidad del cuidador."],
+["boni","Bonis","2016","MED","¿Qué papel da Bonis a la intervención psicológica?","Es fundamental para padres de niños con autismo: intervenir solo al niño no basta, también se requieren programas basados en evidencia para los padres.","Intervenir también al cuidador.","Fundamenta la utilidad aplicada del estudio."],
+["mend","Méndez-Lara et al.","2025","EST","¿Qué diferencias hallaron Méndez-Lara et al.?","Hay diferencias significativas en estrés y afrontamiento entre padres de niños neurodivergentes y neurotípicos; el autismo tiene mayor impacto.","Autismo = mayor impacto.","Justifica estudiar cuidadores de niños con TND."],
+["holm","Holmberg et al.","2023","EST","¿Qué costo tiene criar a un niño con TND según Holmberg et al.?","Se asocia con distrés, depresión, ansiedad y problemas físicos, y reorganiza el sistema familiar. Prueban un grupo ACT para padres.","Desgaste de salud mental.","Respalda el planteamiento del problema."],
+["vas1","Vasiou et al.","2023","CRI","¿Cómo conciben Vasiou et al. los estilos de crianza?","Como un constructo multidimensional: no encasillan al padre en un solo estilo, hay perfiles combinados y los padres perciben su estilo como positivo.","Multidimensionalidad.","Sustenta el uso cauteloso de Baumrind y el sesgo de deseabilidad social."],
+["vas2","Vasiou et al.","2023","CRI","¿Qué dicen Vasiou et al. del estilo autoritario y el permisivo?","Se asocian con mayor vulnerabilidad socioemocional; del autoritario no hallaron relación con conductas internalizantes o externalizantes y piden cautela.","Autoritario: tratar con cautela.","Contrasta con Crowell et al. (2019)."],
+["lans","Lansford","2022","CTX","¿Por qué importa la cultura según Lansford?","Posibilidades, límites y conductas esperadas dependen del contexto cultural; las intervenciones deben ajustarse a cultura, creencias y costumbres.","Crianza culturalmente situada.","Justifica estudiar el contexto colombiano."],
+["clau","Clauser et al.","2021","CRI","¿Qué plantean Clauser et al. sobre estilos y conducta en TEA?","La evidencia es contradictoria; un estilo autoritativo puede mitigar el estrés y las demandas conductuales, y la relación es bidireccional (el niño influye en una crianza más punitiva).","Relación bidireccional.","Fundamenta el vacío en estilos de crianza en TND."],
+["vela","Vela et al.","2024","CTX","¿Qué aporta el estudio de Vela et al. en Latinoamérica?","Un programa de 9 sesiones con padres latinos de niños con autismo: efecto individual significativo, pero ambiguo en lo general.","Escasa evidencia latina.","Evidencia la escasez regional."],
+["maga","Magaña et al.","2021","CTX","¿Qué muestran Magaña et al. en Colombia?","Un programa de educación para padres sobre autismo con resultados positivos, que no abordó flexibilidad psicológica ni estilos de crianza.","Vacío en Colombia.","Justifica estudiar ambas variables juntas."],
+["becc","Beccassino et al.","2026","FLX","¿Cómo conecta la flexibilidad psicológica con las habilidades de crianza Beccassino et al.?","Para pasar de las habilidades al contexto real de la crianza se necesita la flexibilidad psicológica como puente hacia los valores y la acción comprometida (hexaflex).","Flexibilidad = puente hacia los valores.","Justifica incluir flexibilidad en la tesis."],
+["gur","Gur y Reich","2023","FLX","¿Qué concluyen Gur y Reich en su revisión sistemática?","La flexibilidad se asocia con mejor crianza y bienestar; la inflexibilidad, con ansiedad, depresión y distrés. Hay pocos estudios en discapacidad intelectual y TND.","Flexibilidad = bienestar; vacío en TND.","Pilar del vacío de investigación."],
+["more","Moreno","2020","FLX","¿Qué relación halló Moreno entre flexibilidad y adherencia?","La inflexibilidad (fusión cognitiva, evitación experiencial) se relaciona con menor adherencia al tratamiento en niños con TND.","Inflexibilidad ↓ adherencia.","Muestra la utilidad clínica de la flexibilidad en Latinoamérica."],
+["lob22","Lobato et al.","2022","FLX","¿Qué explican Lobato et al. sobre la inflexibilidad parental?","Explica una parte alta del estrés; favorece suprimir pensamientos, respuestas punitivas y reactivas, y mayor riesgo de ansiedad y depresión.","Inflexibilidad → estrés y reactividad.","Define el costo de la inflexibilidad."],
+["gar","García et al.","2022","CTX","¿Qué sesgo de la literatura señala la tesis con García et al.?","Según la tesis, la mayoría de estudios es de EE. UU. (más del 60 %) y solo 2 % de Latinoamérica, África y Medio Oriente.","Sesgo cultural de la literatura.","Justifica el aporte en población colombiana.","Verifica las cifras: el fragmento de la fuente muestra 18 de 30 estudios en EE. UU. (60 %) y ninguno en Latinoamérica."],
+["bras","Brassell et al.","2016","FLX","¿Qué relación encuentran Brassell et al. entre flexibilidad y crianza?","La flexibilidad psicológica de los padres se asocia con prácticas de crianza más adaptativas y bienestar psicosocial del niño.","Flexibilidad ↔ crianza adaptativa.","Justificación aplicada de relacionar ambas variables."],
+["hay11","Hayes et al.","2011","INS","¿Qué modelo de flexibilidad psicológica propone Hayes et al.?","Un modelo hexagonal (ACT) de 6 procesos; la inflexibilidad psicológica es la raíz del sufrimiento y de la disfunción.","Modelo hexagonal de 6 procesos.","Base teórica del 6-PAQ."],
+["gree","Greene et al.","2015","INS","¿Qué creó Greene et al.?","El 6-PAQ original: adapta la flexibilidad de Hayes a la crianza, con 18 ítems y 6 dimensiones (α total = .88).","6-PAQ original.","Origen del instrumento usado."],
+["fl20","Flujas-Contreras et al.","2020","INS","¿Qué versión del 6-PAQ usa la tesis y quién la validó?","La validación española: 16 ítems en 3 factores (abierto, centrado, comprometido), con α = .81 y ω = .86.","3 factores: abierto, centrado, comprometido.","Versión usada y fuente de medias de referencia."],
+["sant","Santana-Rueda","2026","INS","¿Qué antecedente colombiano tiene el 6-PAQ?","Una tesis de maestría que lo aplicó a 222 padres colombianos; no es una validación psicométrica.","Antecedente, no validación.","Explica la limitación de uso del instrumento."],
+["fl23","Flujas-Contreras et al.","2023","MED","¿Qué papel da Flujas-Contreras et al. a la flexibilidad parental?","Es mediadora de una relación bidireccional: el estrés parental y los problemas emocionales y conductuales del niño se influyen mutuamente.","Flexibilidad como puente bidireccional.","Apoya su relevancia entre estrés y ajuste infantil."],
+["lob2325","Lobato et al.","2023/2025","MED","¿Qué logran las intervenciones ACT con padres según Lobato et al.?","Mejoran la inflexibilidad psicológica y la supresión de pensamientos, y favorecen una crianza consistente y autodirigida.","ACT reduce inflexibilidad.","Respalda la utilidad aplicada."],
+["reic","Reich et al.","2025","MED","¿Qué matiz aporta Reich et al. sobre la flexibilidad?","La mediación de la autoeficacia no opera igual en familias neurotípicas y con autismo; tampoco hallaron diferencias por sexo.","Efectos distintos según población.","Comparador sin diferencias por sexo."],
+["zhan","Zhang et al.","2025","MED","¿Qué subdimensiones median según Zhang et al.?","Defusión cognitiva y acciones comprometidas median entre la disciplina conductual y la ansiedad materna.","Defusión y acción comprometida median.","Conecta con las dimensiones del 6-PAQ."],
+["koc","Koç y Akbulut","2026","MED","¿Qué hallaron Koç y Akbulut sobre el agotamiento parental?","La inflexibilidad se relaciona con agotamiento parental y la reactividad emocional lo media de forma parcial.","Reactividad emocional como mediador parcial.","Costo de la inflexibilidad."],
+["liu","Liu et al.","2026","MED","¿Qué relación hallaron Liu et al. entre madres y padres?","Una relación unidireccional: la flexibilidad materna reduce la ansiedad y aumenta la participación paterna, no al revés.","Efecto unidireccional madre → padre.","Subraya el rol de la madre."],
+["chon","Chong et al.","2024","MED","¿Qué componentes pesan más según Chong et al.?","Aceptación, atención flexible al presente y acción hacia valores; la flexibilidad media entre competencias parentales y bienestar familiar.","Flexibilidad > entrenamiento de habilidades.","Prioriza la regulación flexible."],
+["mazh","Mazhar y Kausar","2024","MED","¿Qué aportan Mazhar y Kausar desde Pakistán?","La flexibilidad no es un concepto regional; las terapias de tercera generación son efectivas y generan mayor bienestar parental.","Universalidad del constructo.","Muestra alcance global."],
+["fons","Fonseca et al.","2020","MED","¿Qué vínculo hallan Fonseca et al. entre flexibilidad y estilos?","La flexibilidad parental media entre estrés y estilo: menor flexibilidad se asocia con crianza más desadaptativa; mayor, con estilo autoritativo y menos malestar.","Flexibilidad ↔ estilo autoritativo.","Enlaza directamente las dos variables de la tesis."],
+["bau1","Baumrind","1971","CRI","¿Cómo define Baumrind el estilo autoritativo?","Control, exigencia y ánimo positivo elevados; se asocia con responsabilidad y cooperación social.","Control + exigencia + afecto.","Estilo predominante en la muestra."],
+["bau2","Baumrind","1971","CRI","¿Cómo define Baumrind el estilo autoritario?","Padres distantes y controladores que dejan de lado el afecto; mucho control y poca calidez.","Control alto, afecto bajo.","Estilo asociado al estado civil en los resultados."],
+["bau3","Baumrind","1971","CRI","¿Cómo define Baumrind el estilo permisivo?","Padres relativamente afectuosos con poco control y poca exigencia; en 1966 se relacionó con conductas agresivas.","Afecto con poca exigencia.","Tercer estilo medido con el PSDQ."],
+["cult","Widiastuti et al.; Di Giunta et al.; Lunetti et al.","2026/2024/2022","CTX","¿Qué dicen sobre la validez cultural del modelo de Baumrind?","Hay críticas a su uso universal, pero encuentran similitudes entre Estados Unidos y Colombia en responsividad y reglas.","Modelo útil con ajuste cultural.","Justifica aplicarlo en Colombia."],
+["delg","Delgado y Arias","2021","CRI","¿Qué predice la conducta disruptiva según Delgado y Arias?","Los estilos de crianza, la cohesión y la adaptabilidad predicen las conductas disruptivas más que la gravedad del diagnóstico.","Familia > gravedad.","Importancia de estudiar la crianza."],
+["clav","Clavijo et al.","2023","CRI","¿Qué relación hallan Clavijo et al. con el nivel socioeconómico?","Estrato y educación más bajos se asocian con estilos más autoritarios y más rigidez; estrato y educación más altos, con el autoritativo.","Estilo ligado a estrato y educación.","Respalda las variables sociodemográficas."],
+["fuen","Fuentes-Vilugrón et al.","2022","CRI","¿Cómo describen Fuentes-Vilugrón et al. los estilos?","El autoritativo equilibra control, exigencia y afecto con reglas razonadas; el permisivo, mucho afecto y baja exigencia.","Definición de estilos.","Definición operacional."],
+["maci","Maciel et al.","2022","CRI","¿Qué relación observan Maciel et al.?","El estilo autoritario se asocia con coparentalidad negativa y, débilmente, con demandas conductuales del niño con autismo.","Autoritario ↔ coparentalidad negativa.","Enlace con el estado civil."],
+["mars","Marston et al.","2022","CRI","¿Qué estilo predomina según Marston et al.?","El autoritativo, luego el permisivo y luego el autoritario; el sexo del cuidador no se relacionó con el estilo.","Predomina autoritativo.","Comparador principal de resultados."],
+["crow","Crowell et al.","2019","CRI","¿Qué aportan Crowell et al. sobre la crianza en TEA?","La sensibilidad y la sincronización protegen; el estilo autoritario refuerza conductas externalizantes y el permisivo también se relaciona con ellas.","Autoritario ↔ externalizantes.","Dialoga con el hallazgo sobre estilo autoritario."],
+["muri","Murillo et al.","2026","CRI","¿Qué hallaron Murillo et al. en niños de 3 a 5 años con TEA?","Predomina el estilo autoritativo; con otros estilos las conductas problema no se perciben como problema.","Predomina autoritativo.","Comparador de predominio."],
+["robi","Robinson et al.","1995","INS","¿Qué creó Robinson et al.?","El PSDQ: cuestionario que mide los estilos autoritativo, autoritario y permisivo desde las dimensiones de Baumrind.","Origen del PSDQ.","Instrumento de estilos usado."],
+["bed","Bedoya-Valderrama","2025","INS","¿Qué aporta Bedoya-Valderrama?","La validación del PSDQ en Colombia y Uruguay (n = 688): 25 ítems (15 autoritativos, 6 autoritarios, 4 permisivos) y medias normativas.","PSDQ validado en Colombia.","Fuente de las medias de comparación."],
+["idri","Idring et al.","2014","DIS","¿Qué relación observaron Idring et al. con la edad materna?","Madres de 30 a 45 años mostraron asociación con el nacimiento de un hijo con autismo, sin carácter causal.","Edad materna, no causal.","Contextualiza la edad de las cuidadoras."],
+["lava","La Valle et al.","2021","DIS","¿Qué función cumple la comunicación no verbal para La Valle et al.?","Compensa las dificultades del habla; los gestos sirven para pedir y el habla para responder en TEA.","Comunicación no verbal compensatoria.","Explica el tipo de comunicación de la muestra."],
+["ric26","Ricardo et al.","2026","DIS","¿Por qué predomina el TEA en la muestra según Ricardo et al.?","Es el trastorno con más demanda en neuropediatría y psiquiatría infantil en Colombia y sus criterios son amplios.","Predominio de TEA.","Explica la composición de la muestra."],
+["quin","Quintana","2017","DIS","¿Qué limita el apoyo terapéutico según Quintana?","Las cláusulas contractuales de la medicina prepagada restringen algunos servicios.","Barreras de acceso.","Explica diferencias en apoyos terapéuticos."],
+["down","Downey et al.","2026","DIS","¿Qué creencias explican la baja asistencia a psiquiatría según Downey et al.?","Perspectivas y creencias culturales de los cuidadores sobre psicofármacos.","Creencias sobre psicofármacos.","Explica el porcentaje bajo de psiquiatría."],
+["ric21","Ricardo Ramírez et al.","2021","DIS","¿Qué factores exponen Ricardo Ramírez et al. en padres colombianos?","Evitar a toda costa que su hijo tenga un problema de salud mental, miedo a efectos secundarios y búsqueda de ayuda religiosa.","Creencias sobre salud mental.","Complementa la explicación de psiquiatría.","La tesis la cita como 2019; en la lista aparece 2021."],
+["wang","Wang et al.","2025","DIS","¿Qué respaldan Wang et al.?","Mayor predominio del estilo autoritativo, pero en población neurotípica.","Autoritativo también en neurotípicos.","Comparación indirecta."],
+["baya","Bayazy y Gur","2025","DIS","¿Qué observan Bayazy y Gur en padres de niños con autismo?","Con el tiempo los padres se adaptan a los retos y no hallaron diferencias de calidad conyugal.","Adaptación y calidad marital.","Contrasta con el hallazgo del estado civil."],
+["ates","Ateş-Yaman y Kurt","2026","DIS","¿Qué hallaron Ateş-Yaman y Kurt por sexo?","Sin diferencias significativas según el sexo de los padres.","Sin diferencias por sexo.","Apoya los resultados por sexo."],
+["xie","Xie et al.","2025","DIS","¿Para qué usa la tesis a Xie et al.?","Para sostener que los apoyos en la crianza se relacionan con la flexibilidad psicológica.","Apoyo ↔ flexibilidad.","Respalda la tendencia de la variable apoyo.","Verifica el artículo: en la lista aparece como estudio sobre control psicológico parental en adolescentes chinos."],
+["beck","Beck et al.","2025","DIS","¿Qué advierten Beck et al.?","El estrés parental puede sesgar los datos de flexibilidad.","Estrés como variable que sesga.","Limitación: no se midió estrés."],
+["feng","Feng et al.","2025","DIS","¿Qué mecanismo muestran Feng et al.?","La flexibilidad psicológica parental puede actuar como mecanismo de mediación en torno al estrés parental.","Flexibilidad media el estrés.","Línea futura: medir estrés."],
+["daks","Daks et al.","2020/2022","DIS","¿Qué papel dan Daks et al. a la familia?","La estructura familiar por sí sola no es significativa; los procesos familiares son clave para la flexibilidad y la crianza.","Procesos > estructura.","Explica la ausencia de diferencias por tipo de familia."],
+["abid","Abidin","2011","DIS","¿Qué plantea Abidin sobre la salud del cuidador?","El malestar físico o la sobrecarga de salud merman los recursos del cuidador y condicionan la crianza.","Salud ↔ recursos del cuidador.","Explica la tendencia por estado de salud (p = .038)."],
+["cice","Cicek et al.","2025","DIS","¿Qué preocupación comparten Cicek et al.?","El riesgo de muestras reducidas y desproporcionadas.","Poder estadístico limitado.","Subgrupo de enfermos pequeño (n = 4)."],
+["grnl","Greenlee et al.","2022","DIS","¿Qué influye en la crianza según Greenlee et al.?","La calidad y satisfacción de la pareja influye en las conductas de crianza.","Calidad marital → crianza.","Posible explicación del estado civil."],
+["rich","Richaud","2007","DIS","¿Qué sesgo describe Richaud?","La deseabilidad social en investigación psicológica y autorreportes.","Deseabilidad social.","Limitación posible en el PSDQ."],
+["bisp","Bispo","2022","DIS","¿Cómo reinterpreta Bispo la deseabilidad social?","Como información sobre el contexto evaluado, no solo como error.","Sesgo como dato contextual.","Matiza la limitación."],
+["frias","Frías-Navarro","2020","DIS","¿Qué advierte Frías-Navarro sobre muestras pequeñas?","La desproporción entre grupos reduce el poder y aumenta el riesgo de no detectar efectos o de sobreinterpretar.","Poder estadístico.","Cautela con el subgrupo de salud."]
+];
+const cards=R.map(r=>({id:r[0],au:r[1],y:r[2],th:r[3],q:r[4],a:r[5],k:r[6],t:r[7],w:r[8]||""}));
+const byId={};cards.forEach(c=>byId[c.id]=c);
+const lab=c=>c.au+" ("+c.y+")";
+const REL=[
+{t:"sim",ids:["mars","muri"],x:"Predomina el estilo autoritativo en padres de niños con TEA."},
+{t:"sim",ids:["crai","barr","hw"],x:"El estrés parental es mayor en padres de niños con TND, y más en TEA."},
+{t:"sim",ids:["lob22","more"],x:"La inflexibilidad lleva a controlar, suprimir o evitar lo desagradable."},
+{t:"sim",ids:["maci","crow"],x:"El estilo autoritario se vincula con dificultades conductuales y de pareja en autismo."},
+{t:"sim",ids:["kish","fran"],x:"La autoeficacia parental explica parte del estrés del cuidador."},
+{t:"sim",ids:["fons","bras"],x:"Mayor flexibilidad se asocia con una crianza más adaptativa."},
+{t:"sim",ids:["zhan","koc"],x:"La flexibilidad opera por procesos emocionales (ansiedad, reactividad)."},
+{t:"sim",ids:["lob2325","mazh"],x:"Las terapias de tercera generación (ACT) mejoran el bienestar parental."},
+{t:"sim",ids:["ates","reic"],x:"No hay diferencias por sexo del cuidador."},
+{t:"sim",ids:["fant","turn"],x:"La gravedad del diagnóstico y el factor económico condicionan la calidad de vida del cuidador."},
+{t:"sim",ids:["vela","maga","gar"],x:"Hay poca evidencia en Latinoamérica y Colombia."},
+{t:"cmp",ids:["hay11","gree","fl20","sant"],x:"Cadena del 6-PAQ: modelo ACT, versión parental, validación española y uso en Colombia."},
+{t:"cmp",ids:["bark","sb03","sb07"],x:"Evolución de los modelos explicativos del TDAH."},
+{t:"cmp",ids:["just","bc","happe"],x:"Tres explicaciones complementarias del TEA: conectividad, teoría de la mente y coherencia central."},
+{t:"cmp",ids:["bau1","bau2","bau3"],x:"Los tres estilos forman una sola tipología de Baumrind."},
+{t:"cmp",ids:["bau1","cult","bed"],x:"Modelo de Baumrind, validez cultural e instrumento validado en Colombia."},
+{t:"cmp",ids:["robi","bed"],x:"PSDQ: versión original y validación en Colombia y Uruguay."},
+{t:"cmp",ids:["fons","fl23"],x:"Flexibilidad como puente entre estrés y estilos (Fonseca) o ajuste infantil (Flujas-Contreras)."},
+{t:"cmp",ids:["more","lob22","gur"],x:"Costos de la inflexibilidad: adherencia, estrés y bienestar."},
+{t:"cmp",ids:["abid","cice","frias"],x:"Explican la tendencia por estado de salud: sobrecarga del cuidador y subgrupos pequeños."},
+{t:"cmp",ids:["quin","down","ric21"],x:"Barreras al apoyo terapéutico: planes de salud y creencias sobre psiquiatría."},
+{t:"cmp",ids:["grnl","maci","crow"],x:"Calidad de pareja y coparentalidad como posible explicación del estado civil."},
+{t:"cmp",ids:["beck","feng"],x:"El estrés parental, no medido, se relaciona con la flexibilidad."},
+{t:"dif",ids:["mars","crow"],x:"Marston halla predominio autoritativo en TEA; Crowell relaciona el autoritario con conductas externalizantes."},
+{t:"dif",ids:["vas2","crow"],x:"Vasiou no halló relación del autoritario con conductas; Crowell lo presenta como reforzador de externalizantes."},
+{t:"dif",ids:["kish","fran"],x:"Kishimoto: cohesión inversa al estrés y adaptabilidad sin efecto. François-Sévigny: diagnóstico independiente y sexo moderador."},
+{t:"dif",ids:["reic","liu"],x:"Reich: la mediación cambia entre neurotípicos y autismo. Liu: relación unidireccional madre a padre."},
+{t:"dif",ids:["baya","grnl"],x:"Bayazy y Gur no hallaron diferencias de calidad conyugal; Greenlee muestra que la satisfacción marital influye en la crianza."}
+];
+const RT={sim:"Aportan ideas similares",cmp:"Se complementan",dif:"Presentan diferencias"};
+const KEY="tesis-aportes-v1";let mem={};
+function load(){try{const s=localStorage.getItem(KEY);if(s)return JSON.parse(s)}catch(e){}return {}}
+let P=load();
+function save(){mem=P;try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+const INT=[0,1,3,7,14,30],DAY=864e5;
+const gp=id=>P[id]||null;
+function upd(id,r){
+  const p=P[id]||{b:0,d:0,n:0,l:0};p.n++;const now=Date.now();
+  if(r===0){p.b=0;p.d=now;p.l++}
+  else if(r===1){p.b=Math.min(Math.max(p.b,1),2);p.d=now+INT[p.b]*DAY}
+  else{p.b=Math.min(p.b+1,5);p.d=now+INT[p.b]*DAY}
+  P[id]=p;save();
+}
+const S={view:"home",filter:"all",cmpTab:"sim",sess:null,ev:null};
+const $=(s,r)=>(r||document).querySelector(s);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pool=()=>cards.filter(c=>S.filter==="all"||c.th===S.filter);
+function stats(){
+  const t=cards.length;let dom=0,rep=0,dif=0,nue=0,due=0;const now=Date.now();const box=[0,0,0,0,0,0];let next=null;
+  cards.forEach(c=>{const p=gp(c.id);if(!p||!p.n){nue++;return}box[p.b]++;
+    if(p.b>=3)dom++;else if(p.b===0)dif++;else rep++;
+    if(p.d<=now)due++;else if(next===null||p.d<next)next=p.d});
+  return{t,dom,rep,dif,nue,due,box,next};
+}
+function buildQueue(mode){
+  const now=Date.now();let ids=pool();
+  if(mode==="D"){
+    ids=ids.filter(c=>{const p=gp(c.id);return p&&p.n&&(p.b<=2||p.d<=now)});
+    ids.sort((a,b)=>gp(a.id).b-gp(b.id).b);
+    return ids.map(c=>c.id);
+  }
+  const sc=c=>{const p=gp(c.id);const r=Math.random()*.9;if(!p||!p.n)return -1+r;return (p.d<=now?p.b:p.b+10)+r};
+  return ids.slice().sort((a,b)=>sc(a)-sc(b)).map(c=>c.id);
+}
+function startSess(mode,ids){
+  const q=ids||buildQueue(mode);
+  S.sess={mode,q:q.slice(),total:q.length,done:new Set(),hard:new Set(),flipped:false,last:null,cnt:[0,0,0],pick:null,opts:null};
+  S.view="study";render();
+}
+function mkOpts(c){
+  const same=cards.filter(x=>x.id!==c.id&&x.th===c.th&&x.a!==c.a);
+  const other=cards.filter(x=>x.id!==c.id&&x.th!==c.th&&x.a!==c.a);
+  const d=shuffle(same).slice(0,3);
+  if(d.length<3)d.push(...shuffle(other).slice(0,3-d.length));
+  return shuffle([c,...d]).map(x=>({id:x.id,txt:x.a,ok:x.id===c.id}));
+}
+function applyRate(r){
+  const s=S.sess,id=s.q[0];if(!id)return;
+  upd(id,r);s.cnt[r]++;s.last=id;s.q.shift();
+  if(r===2)s.done.add(id);else{s.hard.add(id);s.q.splice(Math.min(r===0?3:7,s.q.length),0,id)}
+  s.flipped=false;s.pick=null;s.opts=null;render();
+}
+function skip(){const s=S.sess,id=s.q.shift();if(id){s.q.push(id)}s.flipped=false;s.pick=null;s.opts=null;render()}
+function back(){const s=S.sess;if(!s.last)return;const id=s.last;const i=s.q.indexOf(id);if(i>=0)s.q.splice(i,1);s.done.delete(id);s.q.unshift(id);s.last=null;s.flipped=false;s.pick=null;s.opts=null;render()}
+function flip(){const s=S.sess;if(!s)return;s.flipped=!s.flipped;const f=$(".flip");if(f)f.classList.toggle("on",s.flipped);const r=$(".rate");if(r)r.classList.toggle("show",s.flipped)}
+function fmtDate(t){return t?new Date(t).toLocaleDateString("es-CO",{day:"numeric",month:"long"}):"—"}
+const MODES={A:["Aprende los aportes","Ves el autor y revelas su contribución principal."],B:["Recuerda el autor","Ves un aporte y piensas quién lo planteó."],C:["Reconoce la contribución","Pregunta con cuatro aportes posibles."],D:["Repaso inteligente","Solo los autores que aún no dominas."]};
+function nav(){
+  const items=[["home","Inicio"],["A","A. Aprende"],["B","B. Autor"],["C","C. Reconoce"],["D","D. Repaso"],["cmp","Comparar"],["eval","Evaluación"]];
+  return '<nav class="nav" aria-label="Modos">'+items.map(([k,l])=>{
+    const on=(k===S.view)||(S.view==="study"&&S.sess&&S.sess.mode===k);
+    return '<button class="tab" data-act="go" data-k="'+k+'" aria-pressed="'+on+'">'+l+'</button>'}).join("")+'</nav>';
+}
+function head(){return '<div class="top"><h1>Aportes de mi tesis</h1><span class="sub">'+cards.length+' tarjetas · Flexibilidad psicológica parental y estilos de crianza</span></div>'+nav()}
+function home(){
+  const st=stats();const pct=Math.round(st.dom/st.t*100);
+  return head()+
+  '<div class="stats">'+
+   '<div class="stat"><b>'+st.dom+'</b><span>Dominadas</span></div>'+
+   '<div class="stat"><b>'+st.rep+'</b><span>En repaso</span></div>'+
+   '<div class="stat"><b>'+st.dif+'</b><span>No las recuerdo</span></div>'+
+   '<div class="stat"><b>'+st.nue+'</b><span>Sin ver</span></div>'+
+   '<div class="stat"><b>'+st.due+'</b><span>Para repasar hoy</span></div></div>'+
+  '<div class="panel" style="display:flex;flex-direction:column;gap:8px"><div class="meta"><span>Dominio global</span><span>'+pct+' %</span></div><div class="bar"><i style="width:'+pct+'%"></i></div>'+
+   '<p class="sub">Cajas de repetición espaciada (intervalos 1, 3, 7, 14 y 30 días): '+st.box.map((n,i)=>"caja "+i+": "+n).join(" · ")+'. Próximo repaso programado: '+fmtDate(st.next)+'.</p></div>'+
+  '<div class="row"><label for="flt" class="sub">Dimensión</label><select id="flt"><option value="all">Todas las dimensiones</option>'+Object.keys(TH).map(k=>'<option value="'+k+'"'+(S.filter===k?" selected":"")+'>'+TH[k]+'</option>').join("")+'</select></div>'+
+  '<div class="modes">'+Object.keys(MODES).map(k=>'<button class="mode" data-act="go" data-k="'+k+'"><strong>'+k+'. '+MODES[k][0]+'</strong><span>'+MODES[k][1]+'</span></button>').join("")+
+   '<button class="mode" data-act="go" data-k="cmp"><strong>Comparar aportes</strong><span>Similares, complementarios, con diferencias y por dimensión.</span></button>'+
+   '<button class="mode" data-act="go" data-k="eval"><strong>Evaluación</strong><span>12 preguntas cortas con informe final.</span></button></div>'+
+  '<p class="sub">Tu progreso se guarda en este navegador. <button class="btn" data-act="reset" style="min-height:32px;padding:4px 10px;font-size:.8rem">Reiniciar progreso</button></p>';
+}
+function faceA(c){return {
+  f:'<span class="chip" style="align-self:flex-start">'+TH[c.th]+'</span><div><div class="au">'+c.au+'</div><div class="yr">'+c.y+'</div></div><div class="q">'+c.q+'</div><div class="hint">Toca para voltear · desliza → lo conozco · ← repasar</div>',
+  b:'<div class="blk"><span class="lab">Aporte del autor</span><p>'+c.a+'</p></div><div class="blk key"><span class="lab">Concepto clave</span><p>'+c.k+'</p></div><div class="blk"><span class="lab">En mi tesis</span><p>'+c.t+'</p></div>'+(c.w?'<div class="warn">'+c.w+'</div>':'')}}
+function faceB(c){return {
+  f:'<span class="chip" style="align-self:flex-start">'+TH[c.th]+'</span><div class="lab">¿Qué autor lo planteó?</div><div class="q" style="margin-top:0">'+c.a+'</div><div class="hint">Toca para voltear</div>',
+  b:'<div><div class="au">'+c.au+'</div><div class="yr">'+c.y+'</div></div><div class="blk key"><span class="lab">Concepto clave</span><p>'+c.k+'</p></div><div class="blk"><span class="lab">En mi tesis</span><p>'+c.t+'</p></div>'+(c.w?'<div class="warn">'+c.w+'</div>':'')}}
+function study(){
+  const s=S.sess;const m=s.mode;
+  if(!s.q.length)return summary();
+  const c=byId[s.q[0]];
+  const pct=Math.round(s.done.size/s.total*100);
+  let body="";
+  const progress='<div><div class="meta"><span>'+MODES[m][0]+' · quedan '+s.q.length+'</span><span>'+s.done.size+' / '+s.total+' dominadas en la sesión</span></div><div class="bar" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+pct+'%"></i></div></div>';
+  if(m==="C"){
+    if(!s.opts)s.opts=mkOpts(c);
+    body='<div class="panel" style="display:flex;flex-direction:column;gap:12px"><span class="chip" style="align-self:flex-start">'+TH[c.th]+'</span><div class="au" style="font-size:1.35rem">'+c.au+' <span class="yr">('+c.y+')</span></div><p class="q" style="margin:0">'+c.q+'</p>'+
+     '<div class="opts">'+s.opts.map((o,i)=>{let cl="opt";if(s.pick!==null){if(o.ok)cl+=" ok";else if(i===s.pick)cl+=" bad"}return '<button class="'+cl+'" data-act="opt" data-i="'+i+'"'+(s.pick!==null?" disabled":"")+'>'+o.txt+'</button>'}).join("")+'</div>'+
+     (s.pick!==null?'<div class="fb"><b>Concepto clave:</b> '+c.k+'<br><b>En mi tesis:</b> '+c.t+'</div>'+(c.w?'<div class="warn">'+c.w+'</div>':'')+'<div class="ctrl"><span></span><button class="btn pri" data-act="next">Siguiente</button></div>':'')+'</div>';
+    return head()+progress+body+'<div class="ctrl"><button class="btn" data-act="back"'+(s.last?"":" disabled")+'>Atrás</button><button class="btn" data-act="end">Terminar sesión</button></div>';
+  }
+  const f=m==="B"?faceB(c):faceA(c);
+  body='<div class="stage"><span class="tag r" id="tr">Lo conozco</span><span class="tag l" id="tl">Repasar</span><div class="card" id="card"><div class="flip'+(s.flipped?" on":"")+'"><div class="face front">'+f.f+'</div><div class="face back">'+f.b+'</div></div></div></div>'+
+   '<div class="rate'+(s.flipped?" show":"")+'"><button class="n" data-act="rate" data-r="0">No lo recuerdo</button><button class="p" data-act="rate" data-r="1">Parcialmente</button><button class="d" data-act="rate" data-r="2">Lo domino</button></div>'+
+   '<div class="ctrl"><button class="btn" data-act="back"'+(s.last?"":" disabled")+'>Atrás</button><button class="btn" data-act="flip">Voltear</button><button class="btn" data-act="skip">Avanzar</button></div>'+
+   '<p class="sub">Teclado: espacio voltea, ← repasar, → lo conozco, 1 / 2 / 3 califica.</p>';
+  return head()+progress+body+'<div class="ctrl"><span></span><button class="btn" data-act="end">Terminar sesión</button></div>';
+}
+function summary(){
+  const s=S.sess;const hard=[...s.hard];
+  const empty=s.total===0;
+  return head()+'<div class="panel" style="display:flex;flex-direction:column;gap:10px"><h2>'+(empty?"No hay tarjetas pendientes":"Sesión terminada")+'</h2>'+
+   (empty?'<p>No tienes autores por repasar en esta dimensión. Practica el modo A para ver tarjetas nuevas.</p>':
+   '<p>Calificaciones: '+s.cnt[0]+' no recordadas, '+s.cnt[1]+' parciales, '+s.cnt[2]+' dominadas.</p>'+
+   (hard.length?'<p>Tarjetas difíciles de esta sesión: '+hard.length+'.</p>':'<p>No quedaron tarjetas difíciles.</p>'))+
+   '<div class="row">'+(hard.length?'<button class="btn pri" data-act="hard">Repetir las difíciles</button>':'')+'<button class="btn" data-act="go" data-k="home">Inicio</button></div></div>';
+}
+function cmp(){
+  const tabs=[["sim","Similares"],["cmp","Complementarios"],["dif","Diferencias"],["dim","Por dimensión"]];
+  let body="";
+  if(S.cmpTab==="dim"){
+    body='<div class="list">'+Object.keys(TH).map(k=>{const list=cards.filter(c=>c.th===k);const seen=[];const labs=list.filter(c=>{const key=c.au+c.y;if(seen.includes(key))return false;seen.push(key);return true});
+      return '<div class="rel"><h2>'+TH[k]+'</h2><div class="row">'+labs.map(c=>'<span class="chip">'+lab(c)+'</span>').join("")+'</div></div>'}).join("")+'</div>';
+  }else{
+    body='<div class="list">'+REL.filter(r=>r.t===S.cmpTab).map(r=>'<div class="rel"><div class="row">'+r.ids.map(i=>'<span class="chip">'+lab(byId[i])+'</span>').join("")+'</div><p>'+r.x+'</p></div>').join("")+'</div>';
+  }
+  return head()+'<h2>Comparación de aportes</h2><p class="sub">Las relaciones salen de lo que la tesis afirma sobre cada autor.</p><div class="nav">'+tabs.map(([k,l])=>'<button class="tab" data-act="ctab" data-k="'+k+'" aria-pressed="'+(S.cmpTab===k)+'">'+l+'</button>').join("")+'</div>'+body;
+}
+/* evaluación */
+const names=ids=>ids.map(i=>lab(byId[i]));
+const joinN=a=>a.length<2?a.join(""):a.slice(0,-1).join(", ")+" y "+a[a.length-1];
+function mkQs(){
+  const qs=[];
+  const who=shuffle(cards).slice(0,4),what=shuffle(cards).slice(4,8);
+  who.forEach(c=>{
+    const same=shuffle(cards.filter(x=>x.id!==c.id&&x.th===c.th&&lab(x)!==lab(c)));
+    const o=[];const seen=[lab(c)];
+    same.concat(shuffle(cards)).forEach(x=>{if(o.length<3&&!seen.includes(lab(x))){seen.push(lab(x));o.push(x)}});
+    qs.push({type:"who",stem:"¿Qué autor planteó esto? "+c.a,opts:shuffle([c,...o]).map(x=>({txt:lab(x),ok:x.id===c.id,ref:x.id})),ids:[c.id],exp:lab(c)+": "+c.k});
+  });
+  what.forEach(c=>{
+    const same=shuffle(cards.filter(x=>x.id!==c.id&&x.th===c.th&&x.a!==c.a));
+    const o=same.concat(shuffle(cards.filter(x=>x.th!==c.th))).slice(0,3);
+    qs.push({type:"what",stem:"¿Qué aporte corresponde a "+lab(c)+"?",opts:shuffle([c,...o]).map(x=>({txt:x.a,ok:x.id===c.id,ref:x.id})),ids:[c.id],exp:c.k});
+  });
+  const sim=shuffle(REL.filter(r=>r.t==="sim"));
+  sim.slice(0,2).forEach(r=>{
+    const o=sim.filter(x=>x!==r).slice(0,3);
+    qs.push({type:"coin",stem:"¿Qué autores coinciden en esta idea? "+r.x,opts:shuffle([r,...o]).map(x=>({txt:joinN(names(x.ids)),ok:x===r,ref:x.ids[0]})),ids:r.ids,exp:joinN(names(r.ids))});
+  });
+  const dif=shuffle(REL.filter(r=>r.t==="dif"));
+  dif.slice(0,2).forEach(r=>{
+    const o=dif.filter(x=>x!==r).slice(0,3);
+    qs.push({type:"dif",stem:"¿Qué diferencia existe entre "+joinN(names(r.ids))+"?",opts:shuffle([r,...o]).map(x=>({txt:x.x,ok:x===r,ref:x.ids[0]})),ids:r.ids,exp:r.x});
+  });
+  return shuffle(qs);
+}
+function evalView(){
+  if(!S.ev){return head()+'<div class="panel" style="display:flex;flex-direction:column;gap:10px"><h2>Evaluación</h2><p>12 preguntas cortas: qué autor hizo cada aporte, qué aporte corresponde a cada autor, qué autores coinciden y qué diferencia hay entre dos autores. Al final ves tu porcentaje, los autores que dominas y los que debes repasar.</p><div><button class="btn pri" data-act="evstart">Comenzar</button></div></div>'}
+  const e=S.ev;
+  if(e.i>=e.qs.length)return evalResult();
+  const q=e.qs[e.i];
+  return head()+'<div class="meta"><span>Pregunta '+(e.i+1)+' de '+e.qs.length+'</span><span>'+e.right+' correctas</span></div><div class="bar"><i style="width:'+Math.round(e.i/e.qs.length*100)+'%"></i></div>'+
+   '<div class="panel" style="display:flex;flex-direction:column;gap:12px"><p class="q" style="margin:0">'+q.stem+'</p><div class="opts">'+q.opts.map((o,i)=>{let cl="opt";if(e.pick!==null){if(o.ok)cl+=" ok";else if(i===e.pick)cl+=" bad"}return '<button class="'+cl+'" data-act="evopt" data-i="'+i+'"'+(e.pick!==null?" disabled":"")+'>'+o.txt+'</button>'}).join("")+'</div>'+
+   (e.pick!==null?'<div class="fb">'+q.exp+'</div><div class="ctrl"><span></span><button class="btn pri" data-act="evnext">'+(e.i===e.qs.length-1?"Ver resultados":"Siguiente")+'</button></div>':'')+'</div>';
+}
+function evalResult(){
+  const e=S.ev;const pct=Math.round(e.right/e.qs.length*100);
+  const good=[...new Set(e.good)].filter(i=>!e.bad.includes(i));const bad=[...new Set(e.bad)];
+  const L=i=>'<li>'+lab(byId[i])+'</li>';
+  return head()+'<div class="panel"><div class="lab">Resultado</div><div class="big">'+pct+' %</div><p class="sub">'+e.right+' de '+e.qs.length+' respuestas correctas</p></div>'+
+   '<div class="res"><div class="panel"><b>Autores que domino</b><ul>'+(good.length?good.map(L).join(""):"<li>Ninguno todavía</li>")+'</ul></div>'+
+   '<div class="panel"><b>Autores que necesito repasar</b><ul>'+(bad.length?bad.map(L).join(""):"<li>Ninguno</li>")+'</ul></div>'+
+   '<div class="panel"><b>Aportes que confundo</b><ul>'+(e.conf.length?e.conf.map(x=>'<li>'+x+'</li>').join(""):"<li>Ninguno</li>")+'</ul></div></div>'+
+   '<div class="row"><button class="btn pri" data-act="evstart">Repetir evaluación</button><button class="btn" data-act="go" data-k="home">Inicio</button></div>';
+}
+function render(){
+  const root=$("#app");
+  let h="";
+  if(S.view==="home")h=home();else if(S.view==="study")h=study();else if(S.view==="cmp")h=cmp();else if(S.view==="eval")h=evalView();
+  root.innerHTML=h;bindCard();
+}
+function bindCard(){
+  const card=$("#card");if(!card)return;
+  let x0=null,dx=0,id=null;
+  card.addEventListener("pointerdown",e=>{x0=e.clientX;dx=0;id=e.pointerId;try{card.setPointerCapture(id)}catch(_){}});
+  card.addEventListener("pointermove",e=>{if(x0===null)return;dx=e.clientX-x0;if(Math.abs(dx)>6)card.classList.add("drag");
+    card.style.transform="translateX("+dx+"px) rotate("+dx/30+"deg)";
+    $("#tr").style.opacity=dx>40?Math.min(1,dx/120):0;$("#tl").style.opacity=dx<-40?Math.min(1,-dx/120):0});
+  const end=()=>{if(x0===null)return;const d=dx;x0=null;card.classList.remove("drag");$("#tr").style.opacity=0;$("#tl").style.opacity=0;
+    if(Math.abs(d)<6){card.style.transform="";flip();return}
+    if(Math.abs(d)>90){card.style.transform="translateX("+(d>0?700:-700)+"px)";card.style.opacity="0";setTimeout(()=>applyRate(d>0?2:0),170)}
+    else card.style.transform=""};
+  card.addEventListener("pointerup",end);card.addEventListener("pointercancel",end);
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;
+  if(a==="go"){const k=b.dataset.k;
+    if("ABCD".includes(k)&&k.length===1){startSess(k)}
+    else{S.view=k;if(k==="eval"&&S.ev&&S.ev.i>=S.ev.qs.length)S.ev=null;render()}}
+  else if(a==="rate")applyRate(+b.dataset.r);
+  else if(a==="flip")flip();
+  else if(a==="skip")skip();
+  else if(a==="back")back();
+  else if(a==="end"){S.sess.q=[];render()}
+  else if(a==="hard"){startSess(S.sess.mode,[...S.sess.hard])}
+  else if(a==="opt"){const s=S.sess;if(s.pick!==null)return;s.pick=+b.dataset.i;render()}
+  else if(a==="next"){const s=S.sess;const ok=s.opts[s.pick].ok;applyRate(ok?2:0)}
+  else if(a==="ctab"){S.cmpTab=b.dataset.k;render()}
+  else if(a==="reset"){P={};save();render()}
+  else if(a==="evstart"){S.ev={qs:mkQs(),i:0,pick:null,right:0,good:[],bad:[],conf:[]};S.view="eval";render()}
+  else if(a==="evopt"){const ev=S.ev;if(ev.pick!==null)return;const i=+b.dataset.i;const q=ev.qs[ev.i];ev.pick=i;const o=q.opts[i];
+    if(o.ok){ev.right++;ev.good.push(...q.ids)}else{ev.bad.push(...q.ids);
+      if(q.type==="who"){ev.conf.push("Atribuiste a "+o.txt+" un aporte de "+lab(byId[q.ids[0]]))}
+      else if(q.type==="what"){ev.conf.push("Confundiste el aporte de "+lab(byId[q.ids[0]])+" con el de "+lab(byId[o.ref]))}
+      else ev.conf.push("Confundiste: "+joinN(names(q.ids)))}
+    render()}
+  else if(a==="evnext"){S.ev.i++;S.ev.pick=null;render()}
+});
+document.addEventListener("change",e=>{if(e.target.id==="flt"){S.filter=e.target.value;render()}});
+document.addEventListener("keydown",e=>{
+  const s=S.sess;if(S.view!=="study"||!s||!s.q.length||s.mode==="C")return;
+  if(e.target.closest&&e.target.closest("select,button"))return;
+  if(e.key===" "){e.preventDefault();flip()}
+  else if(e.key==="ArrowRight")applyRate(2);else if(e.key==="ArrowLeft")applyRate(0);
+  else if(s.flipped&&e.key==="1")applyRate(0);else if(s.flipped&&e.key==="2")applyRate(1);else if(s.flipped&&e.key==="3")applyRate(2);
+});
+render();
+</script>
+
+</body></html>
